@@ -5,7 +5,6 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/dchalops/microservices
+          uri: https://dchalops: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@github.com/dchalops/microservices.git
           search-paths: config
-          username: dchalops
-          password: Chalo2130198720
+ 
