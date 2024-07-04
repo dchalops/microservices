@@ -1,12 +1,12 @@
 spring:
-  profiles: dev
   jpa:
     database: postgresql
     hibernate:
       ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://localhost:5432/microservice
     username: postgres
@@ -18,11 +18,12 @@ eureka:
   client:
     service-url:
       default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
-application:
-  description: UISRAEL YA ESTOY EN EL GIT
-  license: API ISRAEL
-  version: 1.0
-spring.servlet.multipart:
-  enabled: false
-  max-file-size: 2MB
-  max-request-size: 2MB
+application-description: UISRAEL YA ESTOY EN EL GIT
+application-license: API ISRAEL
+application-version: 1.0
+spring:
+  servlet:
+    multipart:
+      enabled: false
+      max-file-size: 2MB
+      max-request-size: 2MB
