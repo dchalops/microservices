@@ -1,28 +1,33 @@
 spring:
   profiles: prod
+  datasource:
+    url: jdbc:postgresql://<prod-host>:5432/microservice
+    username: <prod-username>
+    password: <prod-password>
+    driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-  datasource:
-    url: jdbc:postgresql://localhost:5432/microservice
-    username: postgres
-    password: 123456
-    driver-class-name: org.postgresql.Driver
+
 eureka:
   instance:
     prefer-ip-address: true
   client:
     service-url:
-      default-zone: ${EUREKA_URI:http://localhost:8761/eureka}
+      defaultZone: ${EUREKA_URI:http://<prod-eureka>:8761/eureka}
+
 application:
-  description: UISRAEL YA ESTOY EN EL GIT
-  license: API ISRAEL
+  description: Producción
+  license: API Producción
   version: 1.0
-spring.servlet.multipart:
-  enabled: false
-  max-file-size: 2MB
-  max-request-size: 2MB
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
