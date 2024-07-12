@@ -7,10 +7,11 @@ import com.microservice.userservice.request.UserUpdateRequest;
 import com.microservice.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,6 +22,9 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final ModelMapper modelMapper;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @PostMapping("/save")
     public ResponseEntity<UserDto> save(@Valid @RequestBody RegisterRequest request) {
@@ -60,5 +64,11 @@ public class UserController {
     public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
         userService.deleteUserById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/invokeOtherService")
+    public String invokeOtherService() {
+        String response = restTemplate.getForObject("http://auth-service/v1/auth/login", String.class);
+        return response;
     }
 }
