@@ -2,6 +2,9 @@ package com.microservice.userservice.repository;
 
 import com.microservice.userservice.enums.Active;
 import com.microservice.userservice.model.User;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,5 +17,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByUsername(String username);
 
     List<User> findAllByActive(Active active);
+    Page<User> findAllByActiveAndUsernameContaining(Active active, String username, Pageable pageable);
 
 }

@@ -1,6 +1,8 @@
 package com.microservice.userservice.service;
 
 import com.microservice.userservice.client.FileStorageClient;
+import com.microservice.userservice.dto.PaginatedResponse;
+import com.microservice.userservice.dto.UserDto;
 import com.microservice.userservice.enums.Active;
 import com.microservice.userservice.enums.Role;
 import com.microservice.userservice.exc.NotFoundException;
@@ -11,11 +13,16 @@ import com.microservice.userservice.request.RegisterRequest;
 import com.microservice.userservice.request.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 //import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +42,36 @@ public class UserService {
         return userRepository.save(toSave);
     }
 
-    public List<User> getAll() {
-        return userRepository.findAllByActive(Active.ACTIVE);
+    public PaginatedResponse<UserDto> getAll(String keyword, int limit, int page, String sort) {
+        Sort.Direction direction = sort.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page - 1, limit, Sort.by(direction, "username"));
+
+        Page<User> usersPage = userRepository.findAllByActiveAndUsernameContaining(Active.ACTIVE, keyword, pageable);
+        List<UserDto> users = usersPage.getContent().stream()
+                .map(user -> {
+                    UserDto.UserDtoBuilder userDtoBuilder = UserDto.builder()
+                            .id(user.getId())
+                            .username(user.getUsername())
+                            .email(user.getEmail())
+                            .role(user.getRole())
+                            .status(user.getActive().name())
+                            .verified(true);
+
+                    if (user.getUserDetails() != null) {
+                        userDtoBuilder
+                                .phone(user.getUserDetails().getPhoneNumber())
+                                .userDetails(user.getUserDetails());
+                    }
+
+                    return userDtoBuilder.build();
+                })
+                .collect(Collectors.toList());
+
+        return PaginatedResponse.<UserDto>builder()
+                .rows(users)
+                .total_page(usersPage.getTotalPages())
+                .current_page(usersPage.getNumber() + 1)
+                .build();
     }
 
     public User getUserById(String id) {

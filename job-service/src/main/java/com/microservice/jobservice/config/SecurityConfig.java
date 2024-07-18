@@ -50,10 +50,10 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*") // Permitir todas las solicitudes de origen
-                        .allowedMethods("*") // Permitir todos los métodos HTTP (GET, POST, PUT, etc.)
-                        .allowedHeaders("*") // Permitir todos los encabezados
-                        .allowCredentials(false); // Permitir credenciales (cookies, cabeceras de autenticación, etc.)
+                        .allowedOrigins("http://localhost:3000", "http://localhost:3033")
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }

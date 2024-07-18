@@ -1,6 +1,7 @@
 package com.microservice.userservice.controller;
 
 import com.microservice.userservice.dto.AuthUserDto;
+import com.microservice.userservice.dto.PaginatedResponse;
 import com.microservice.userservice.dto.UserDto;
 import com.microservice.userservice.request.RegisterRequest;
 import com.microservice.userservice.request.UserUpdateRequest;
@@ -33,9 +34,13 @@ public class UserController {
 
     @GetMapping("/getAll")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserDto>> getAll() {
-        return ResponseEntity.ok(userService.getAll().stream()
-                .map(user -> modelMapper.map(user, UserDto.class)).toList());
+    public ResponseEntity<PaginatedResponse<UserDto>> getAll(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "asc") String sort) {
+        
+        return ResponseEntity.ok(userService.getAll(keyword, limit, page, sort));
     }
 
     @GetMapping("/getUserById/{id}")

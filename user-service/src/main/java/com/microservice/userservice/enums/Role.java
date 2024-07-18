@@ -1,5 +1,5 @@
 package com.microservice.userservice.enums;
 
 public enum Role {
-    ADMIN, USER
+    ADMIN, USER, SUPERVISOR
 }

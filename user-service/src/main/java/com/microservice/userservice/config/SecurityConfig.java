@@ -19,7 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    //private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .and()
                 .formLogin().disable()
                 .httpBasic().disable()
-                //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -42,19 +42,19 @@ public class SecurityConfig {
                 "/swagger-ui/**",
                 "/v3/api-docs/**");
     }
-
+/*
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("*") // Permitir todas las solicitudes de origen utilizando patrones
-                        .allowedMethods("*") // Permitir todos los métodos HTTP (GET, POST, PUT, etc.)
-                        .allowedHeaders("*") // Permitir todos los encabezados
-                        .allowCredentials(true); // Permitir credenciales (cookies, cabeceras de autenticación, etc.)
+                        .allowedOrigins("http://localhost:3000", "http://localhost:3033")
+                        .allowedMethods("*")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
-
+*/
 }

@@ -11,20 +11,23 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class AuthConfig {
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/v1/auth/**").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("*").permitAll()
+                .anyRequest().permitAll()
                 .and()
+                .formLogin().disable()
+                .httpBasic().disable()
+                //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -49,17 +52,17 @@ public class AuthConfig {
                 "/v3/api-docs/**");
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("*")
-                        .allowedOrigins("http://localhost:3000") // Origen específico permitido
-                        .allowedHeaders("*")
-                        .allowCredentials(true); // Permitir credenciales
-            }
-        };
-    }
+    // @Bean
+    // public WebMvcConfigurer corsConfigurer() {
+    //     return new WebMvcConfigurer() {
+    //         @Override
+    //         public void addCorsMappings(@NonNull CorsRegistry registry) {
+    //             registry.addMapping("/**")
+    //                     .allowedMethods("*")
+    //                     .allowedOrigins("http://localhost:3000", "http://localhost:3033")
+    //                     .allowedHeaders("*")
+    //                     .allowCredentials(true);
+    //         }
+    //     };
+    // }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.microservice.authservice.client.UserServiceClient;
 import com.microservice.authservice.dto.RegisterDto;
 import com.microservice.authservice.dto.TokenDto;
+import com.microservice.authservice.dto.UserDto;
 import com.microservice.authservice.exc.WrongCredentialsException;
 import com.microservice.authservice.request.LoginRequest;
 import com.microservice.authservice.request.RegisterRequest;
@@ -19,15 +20,22 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserServiceClient userServiceClient;
     private final JwtService jwtService;
-
+    
     public TokenDto login(LoginRequest request) {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        if (authenticate.isAuthenticated())
-            return TokenDto
-                    .builder()
-                    .token(jwtService.generateToken(request.getUsername()))
+        if (authenticate.isAuthenticated()) {
+            UserDto user = UserDto.builder()
+                    .username(request.getUsername())
                     .build();
-        else throw new WrongCredentialsException("Wrong credentials");
+
+            return TokenDto.builder()
+                    .token(jwtService.generateToken(request.getUsername()))
+                    .refreshToken("dummy-refresh-token")
+                    .user(user)
+                    .build();
+        } else {
+            throw new WrongCredentialsException("Wrong credentials");
+        }
     }
 
     public RegisterDto register(RegisterRequest request) {
