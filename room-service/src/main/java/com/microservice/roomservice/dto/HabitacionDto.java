@@ -10,4 +10,6 @@ public class HabitacionDto {
     private Double precioBase;
     private Integer numeroCamas;
     private Integer numeroPersonas;
+    private String imagenUrl; // Nuevo campo
+    private String tipo; // Nuevo campo
 }

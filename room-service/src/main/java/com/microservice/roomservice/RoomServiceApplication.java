@@ -24,7 +24,14 @@ public class RoomServiceApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Habitacion habitacion = new Habitacion("Habitación 101", "Descripción de la Habitación 101", 100.0, 2, 4);
+        Habitacion habitacion = Habitacion.builder()
+                .nombre("Habitación 101")
+                .descripcion("Descripción de la Habitación 101")
+                .precioBase(100.0)
+                .numeroCamas(2)
+                .numeroPersonas(4)
+                .build();
+        
         if (habitacionRepository.findByNombre("Habitación 101").isEmpty()) {
             habitacionRepository.save(habitacion);
         }
